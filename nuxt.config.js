@@ -52,14 +52,14 @@ export default {
   ],
   firebase: {
       config: {
-        apiKey: "AIzaSyAzQIFHma_MZYV70DmN8Dd9pzmboxsq8JA",
-        authDomain: "insta-971ed.firebaseapp.com",
-        databaseURL: "https://insta-971ed.firebaseio.com",
-        projectId: "insta-971ed",
-        storageBucket: "insta-971ed.appspot.com",
-        messagingSenderId: "860712623162",
-        appId: "1:860712623162:web:3a67997d780372a456e903",
-        measurementId: "G-35LCL9TEXR"
+        apiKey: "AIzaSyAv4JtNjAG20RkBey1G_JPOyzU27DGluQ4",
+        authDomain: "mine-d63d6.firebaseapp.com",
+        databaseURL: "https://mine-d63d6.firebaseio.com",
+        projectId: "mine-d63d6",
+        storageBucket: "mine-d63d6.appspot.com",
+        messagingSenderId: "924719079265",
+        appId: "1:924719079265:web:3944106c860844b520af20",
+        measurementId: "G-PKGWZX4MGR"
       },
       services: {
         auth: true,

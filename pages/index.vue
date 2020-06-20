@@ -44,6 +44,7 @@
 <script>
 import Loader from "~/components/Loader.vue";
 import firebase from "firebase";
+import Cookie from "js-cookie";
 
 export default {
   layout: "login",
@@ -59,6 +60,10 @@ export default {
       password1: ""
     };
   },
+  mounted: function () {
+     // let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (Cookie.get("user")) this.$router.push({ path: "/dashboard" });
+  },
   methods: {
     login: function() {
       if (!this.email || !this.password) return;
@@ -72,6 +77,7 @@ export default {
           alert("Email / Password Error");
         })
         .then(user => {
+          Cookie.set("user", true);
           if (user) this.$router.push({ path: "/dashboard" });
         });
     },
@@ -85,10 +91,11 @@ export default {
           var token = result.credential.accessToken;
           // The signed-in user info.
           var user = result.user;
+          Cookie.set("user", true);
           if (user) this.$router.push({ path: "/dashboard" });
         })
         .catch(function(error) {
-          // alert("Something Went Wrong");
+           alert("Something Went Wrong");
         });
     },
     showSignup: function(show) {
@@ -108,7 +115,11 @@ export default {
       }
 
       //passsword validation
-      if (!this.password || this.password.length < 6 || this.password !== this.password1) {
+      if (
+        !this.password ||
+        this.password.length < 6 ||
+        this.password !== this.password1
+      ) {
         alert("Password Mismatch / should contain atleast 6 letters");
         return;
       }
@@ -120,10 +131,11 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .catch(error => {
           this.loader = false;
-          console.log(error.message)
+          console.log(error.message);
           alert("Something went wrong");
         })
         .then(user => {
+          Cookie.set("user", true);
           if (user) this.$router.push({ path: "/dashboard" });
         });
     }
