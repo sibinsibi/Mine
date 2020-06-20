@@ -4,7 +4,7 @@
       <a href="#" class="logo">
         <img src="~/assets/img/add-photo.png" class="logo1" />
         <img src="~/assets/img/mine.png" class="logo2" />
-        <img src="~/assets/img/user.png" class="logo3" />
+          <img src="~/assets/img/user.png" class="logo3" @click="gotoProfile" />
       </a>
     </nav>
     <div id="circularMenu" class="circular-menu">
@@ -19,7 +19,7 @@
         <a href="#" class="menu-item fa fa-facebook"></a>
         <a href="#" class="menu-item fa fa-twitter"></a>
         <a href="#" class="menu-item fa fa-google-plus"></a>
-        <a href="#" class="menu-item fa fa-linkedin"></a>
+        <i href class="menu-item fa fa-power-off" @click="logout"></i>
       </menu>
     </div>
 
@@ -28,8 +28,31 @@
 </template>
 
 <script>
-export default {};
-</script>
+import firebase from "firebase";
+import Cookie from "js-cookie";
+
+export default {
+  methods: {
+    logout: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          Cookie.remove("user");
+          this.$router.push({ path: "/" });
+        })
+        .catch(function(error) {
+          alert("Something went wrong");
+        });
+    },
+    gotoProfile: function() {
+      this.$router.push({ path: "/profile" });
+    }
+  }
+};
+</script>>
+
+
 <style scoped>
 .logo1 {
   width: 10%;
@@ -131,7 +154,7 @@ export default {};
   line-height: 3.9;
   cursor: pointer;
   outline: 0;
-      background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf 100%);
+  background-image: linear-gradient(260deg, #2376ae 0%, #c16ecf 100%);
 }
 
 .circular-menu.active .floating-btn {

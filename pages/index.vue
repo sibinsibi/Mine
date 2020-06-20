@@ -61,7 +61,8 @@ export default {
     };
   },
   mounted: function () {
-     // let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if(!isMobile) this.$router.push({ path: "/error" });
     if (Cookie.get("user")) this.$router.push({ path: "/dashboard" });
   },
   methods: {
