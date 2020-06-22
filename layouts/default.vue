@@ -4,7 +4,7 @@
       <a href="#" class="logo">
         <img src="~/assets/img/add-photo.png" class="logo1" />
         <img src="~/assets/img/mine.png" class="logo2" />
-          <img src="~/assets/img/user.png" class="logo3" @click="gotoProfile" />
+        <img src="~/assets/img/user.png" class="logo3" @click="gotoProfile" />
       </a>
     </nav>
     <div id="circularMenu" class="circular-menu">
@@ -28,21 +28,40 @@
 </template>
 
 <script>
-import firebase from "firebase";
-import Cookie from "js-cookie";
+import * as firebase from "firebase/app";
+import Cookies from "js-cookie";
 
 export default {
+  mounted: function() {
+    this.setupFirebase();
+  },
+  created: function() {
+    this.userEmail = this.$store.state.userEmail;
+  },
   methods: {
-    logout: function() {
-      firebase
+    setupFirebase: async function() {
+      await firebase.auth().onAuthStateChanged(async user => {
+        if (user) {
+          await firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(async token => {
+              Cookies.set("access_token", token);
+              Cookies.set("uid", firebase.auth().currentUser.uid);
+            });
+        } else {
+          this.logout();
+        }
+      });
+    },
+    logout: async function() {
+      await firebase
         .auth()
         .signOut()
-        .then(() => {
-          Cookie.remove("user");
+        .then(async () => {
+          Cookies.remove("access_token");
+          Cookies.remove("uid");
           this.$router.push({ path: "/" });
-        })
-        .catch(function(error) {
-          alert("Something went wrong");
         });
     },
     gotoProfile: function() {
@@ -50,7 +69,7 @@ export default {
     }
   }
 };
-</script>>
+</script>
 
 
 <style scoped>

@@ -1,4 +1,4 @@
-const ignorePaths = ["\u002F__webpack_hmr","\u002F_loading","\u002F_nuxt\u002F"]
+const ignorePaths = ["\u002F__webpack_hmr","\u002F_loading","\u002F_nuxt\u002F","\u002Fadmin",new RegExp("^api", "")]
 
 importScripts(
   'https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js'

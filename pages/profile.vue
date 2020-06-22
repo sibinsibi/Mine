@@ -39,29 +39,20 @@
 <script>
 import Cookie from "js-cookie";
 import firebase from "firebase";
-import admin from '~/plugins/index.js'
 
 export default {
-  asyncData (){
-      if(process.server){
-          
-      }else{
-          console.log('lclient')
-      }
-  },
-  mounted: function() {
-    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (!isMobile) this.$router.push({ path: "/error" });
-    if (!Cookie.get("user")) this.$router.push({ path: "/" });
+  // mounted: function() {
+  //   let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  //   if (!isMobile) this.$router.push({ path: "/error" });
+  //   if (!Cookie.get("user")) this.$router.push({ path: "/" });
 
-      var user = firebase.auth().currentUser;
-      if (user) {
-        console.log(user);
-      } else {
-        // No user is signed in.
-      }
-    
-  },
+  //   var user = firebase.auth().currentUser;
+  //   if (user) {
+  //     console.log(user);
+  //   } else {
+  //     // No user is signed in.
+  //   }
+  // },
   methods: {
     gotoDashboard: function() {
       this.$router.push({ path: "/dashboard" });

@@ -43,13 +43,28 @@
 
 <script>
 import Loader from "~/components/Loader.vue";
-import firebase from "firebase";
-import Cookie from "js-cookie";
+import { db } from "../plugins/firebase";
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import Cookies from "js-cookie";
+import { getUserFromCookie } from "../static/getUser";
 
 export default {
   layout: "login",
   components: {
     Loader
+  },
+  asyncData: async function({ req, redirect }) {
+    var user = {};
+    if (process.server) {
+      user = await getUserFromCookie(req);
+    } else {
+      await firebase.auth().currentUser ? 
+        user = await firebase.auth().currentUser.uid : user = ''
+    }
+    if (user) {
+      redirect("/dashboard");
+    }
   },
   data: () => {
     return {
@@ -60,13 +75,12 @@ export default {
       password1: ""
     };
   },
-  mounted: function () {
+  mounted: function() {
     let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if(!isMobile) this.$router.push({ path: "/error" });
-    if (Cookie.get("user")) this.$router.push({ path: "/dashboard" });
+    if (!isMobile) this.$router.push({ path: "/error" });
   },
   methods: {
-    login: function() {
+    login: async function() {
       if (!this.email || !this.password) return;
 
       this.loader = true;
@@ -77,32 +91,40 @@ export default {
           this.loader = false;
           alert("Email / Password Error");
         })
-        .then(user => {
-          Cookie.set("user", true);
-          if (user) this.$router.push({ path: "/dashboard" });
+        .then(async user => {
+          await firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(async token => {
+              Cookies.set("access_token", token);
+              Cookies.set("uid", user.uid);
+              this.$router.push({ path: "/dashboard" });
+            });
         });
     },
-    signWithGoogle: function() {
+    signWithGoogle: async function() {
       var provider = new firebase.auth.GoogleAuthProvider();
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then(result => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          Cookie.set("user", true);
-          if (user) this.$router.push({ path: "/dashboard" });
+        .then(async result => {
+          await firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(async token => {
+              Cookies.set("access_token", token);
+              Cookies.set("uid", result.user.uid);
+              this.$router.push({ path: "/dashboard" });
+            });
         })
         .catch(function(error) {
-           alert("Something Went Wrong");
+          alert("Something Went Wrong");
         });
     },
     showSignup: function(show) {
       show ? (this.showLogin = false) : (this.showLogin = true);
     },
-    signup: function() {
+    signup: async function() {
       //Email validation
       var atposition = this.email.indexOf("@");
       var dotposition = this.email.lastIndexOf(".");
@@ -132,18 +154,22 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .catch(error => {
           this.loader = false;
-          console.log(error.message);
           alert("Something went wrong");
         })
-        .then(user => {
-          Cookie.set("user", true);
-          if (user) this.$router.push({ path: "/dashboard" });
+        .then(async user => {
+          await firebase
+            .auth()
+            .currentUser.getIdToken(true)
+            .then(async token => {
+              Cookies.set("access_token", token);
+              Cookies.set("uid", user.uid);
+              this.$router.push({ path: "/dashboard" });
+            });
         });
     }
   }
 };
 </script>
-
 
 <style scoped>
 .logo {

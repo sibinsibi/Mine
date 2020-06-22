@@ -1,5 +1,5 @@
 {
-  "name": "insta",
+  "name": "mine",
   "version": "1.0.0",
   "description": "Simple posts app",
   "author": "sibincbn0@gmail.com",
@@ -14,9 +14,11 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/firebase": "^6.0.1",
     "@nuxtjs/pwa": "^3.0.0-0",
+    "cookieparser": "^0.1.0",
     "firebase": "^7.15.1",
     "firebase-admin": "^8.12.1",
     "js-cookie": "^2.2.1",
+    "jwt-decode": "^2.2.0",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {}
