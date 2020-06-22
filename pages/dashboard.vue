@@ -37,4 +37,4 @@ export default {
     if (!isMobile) this.$router.push({ path: "/error" });
   }
 };
-</script>>
+</script>
